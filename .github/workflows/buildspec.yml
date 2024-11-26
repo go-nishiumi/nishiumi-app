@@ -38,8 +38,6 @@ jobs:
         run: npm run lint
       - name: Run prettier
         run: npm run fmt
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
       - name: Run Test
         run: npm run test
 
