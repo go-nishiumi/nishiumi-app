@@ -1,4 +1,15 @@
-// 都道府県グラフの色定義
+import { option } from "../types/interface";
+
+export const startYear: number = 1960;
+export const endYear: number = 2045;
+
+export const options: option[] = [
+  { label: '総人口', value: 0 },
+  { label: '年少人口', value: 1 },
+  { label: '生産年齢人口', value: 2 },
+  { label: '老年人口', value: 3 },
+];
+
 export const prefColorList = [
   "#8B0000",
   "#A52A2A",

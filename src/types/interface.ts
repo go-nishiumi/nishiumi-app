@@ -16,3 +16,8 @@ export interface prefectures {
 export interface prefecturesChkList {
     [key: number]: boolean;
 }
+
+export interface option {
+    label: string;
+    value: number;
+}

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { getPopulations, getPrefectures } from "../../services/home";
 import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { prefColorList } from "../../utils/common";
-import { graphData, population, prefectures, prefecturesChkList } from "../../types/interface";
+import { endYear, options, prefColorList, startYear } from "../../utils/common";
+import { graphData, option, population, prefectures, prefecturesChkList } from "../../types/interface";
 import "./home.css";
 
 function Home() {
@@ -10,21 +10,21 @@ function Home() {
   const [prefecturesChkList, setPrefecturesChkList] = useState<prefecturesChkList>([]);
   const [populations, setPopulations] = useState<graphData[]>([]);
   const [graphfontSize, setgraphFontSize] = useState<number>(14);
+  const [selectedOption, setSelectedOption] = useState<option | null>({ label: '総人口', value: 0 });
 
-  // グラフに表示するデータの開始年と終了年を設定
-  const startYear: number = 1960;
-  const endYear: number = 2045;
-
-  // グラフで表示するデータのひな型を設定
   const populationData: graphData[] = [];
   for (let i = startYear; i <= endYear; i = i + 5) {
     populationData.push({
       year: i,
     });
   }
+  const handleSelectOption = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedValue: number = Number(event.target.value);
+    const selected = options.find((option) => option.value === selectedValue);
+    setSelectedOption(selected || null);
+  };
 
-  // グラフに表示する線
-  const renderLine = () => {
+  const createLine = () => {
     const renderLineList = [];
     for (let j = 1; j <= 47; j++) {
       renderLineList.push(
@@ -41,7 +41,6 @@ function Home() {
     return renderLineList;
   };
 
-  // チェック時の処理
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPrefecturesChkList({
       ...prefecturesChkList,
@@ -50,7 +49,6 @@ function Home() {
     console.log("prefecturesChkList:", prefecturesChkList);
   };
 
-  // 都道府県エリアを表示
   const renderPrefectures = () => {
     console.log('prefectures', prefectures)
     const prefecturesList = prefectures.map(
@@ -72,8 +70,22 @@ function Home() {
     return prefecturesList;
   };
 
+  const renderSelecter = () => {
+    return (
+      <select
+        className="home-select-value"
+        value={selectedOption?.value}
+        onChange={handleSelectOption}
+      >
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    )
+  };
 
-  // グラフを表示
   const renderGraph = () => {
     console.log("populations3", populations);
     return (
@@ -98,7 +110,7 @@ function Home() {
               tick={{ fontSize: graphfontSize, fill: 'blue', fontWeight: 'bold' }}
               tickFormatter={(tick) => `${tick.toLocaleString()}人`}
             />
-            {renderLine()}
+            {createLine()}
             <Tooltip
               formatter={(value) => {
                 return `${value.toLocaleString()}人`
@@ -110,7 +122,6 @@ function Home() {
     );
   };
 
-  // グラフのフォントサイズを解像度に併せて変更
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth;
@@ -146,7 +157,7 @@ function Home() {
           Object.keys(prefecturesChkList)
             .filter((key) => prefecturesChkList[Number(key)] === true)
             .map(async (value1: string) => {
-              populationsList = await getPopulations(value1);
+              populationsList = await getPopulations(value1, Number(selectedOption?.value));
               console.log("populationsList123", populationsList);
               populationsList.map((value, index) => {
                 const param: string = `${value1}`;
@@ -159,12 +170,14 @@ function Home() {
         setPopulations(populationData);
       }
     })();
-  }, [prefecturesChkList]);
+  }, [prefecturesChkList, selectedOption]);
 
   return (
     <>
       <div className="home">
+        <header className="home-title">都道府県</header>
         <div className="home-prefecture-aria">{prefectures[0] && renderPrefectures()}</div>
+        <div className="home-select-container">{renderSelecter()}</div>
         <div className='home-graph-aria'>{populations[0] && prefecturesChkList && renderGraph()}</div>
       </div>
     </>

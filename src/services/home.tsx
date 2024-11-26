@@ -11,14 +11,14 @@ export const getPrefectures = async () => {
   }
 };
 
-export const getPopulations = async (prefCode: string) => {
+export const getPopulations = async (prefCode: string, dataID: number) => {
   try {
     apiConfig.url = `${apiCommonUrl}${apiPopulationsUrl}`;
     apiConfig.params = {
       prefCode: prefCode,
     };
     const result: AxiosResponse = await axios(apiConfig);
-    return result.data.result.data[0].data;
+    return result.data.result.data[dataID].data;
   } catch {
     console.log('error');
   }
