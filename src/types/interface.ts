@@ -1,23 +1,23 @@
 export interface population {
-    year: number;
-    value: number;
+  year: number;
+  value: number;
 }
 
 export interface graphData {
-    year: number;
-    [key: string]: number;
+  year: number;
+  [key: string]: number;
 }
 
 export interface prefectures {
-    prefCode: number;
-    prefName: string;
+  prefCode: number;
+  prefName: string;
 }
 
 export interface prefecturesChkList {
-    [key: number]: boolean;
+  [key: number]: boolean;
 }
 
 export interface option {
-    label: string;
-    value: number;
+  label: string;
+  value: number;
 }

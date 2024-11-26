@@ -1,16 +1,33 @@
 import { useEffect, useState } from "react";
 import { getPopulations, getPrefectures } from "../../services/home";
-import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import {
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 import { endYear, options, prefColorList, startYear } from "../../utils/common";
-import { graphData, option, population, prefectures, prefecturesChkList } from "../../types/interface";
+import {
+  graphData,
+  option,
+  population,
+  prefectures,
+  prefecturesChkList,
+} from "../../types/interface";
 import "./home.css";
 
 function Home() {
   const [prefectures, setPrefectures] = useState<prefectures[]>([]);
-  const [prefecturesChkList, setPrefecturesChkList] = useState<prefecturesChkList>([]);
+  const [prefecturesChkList, setPrefecturesChkList] =
+    useState<prefecturesChkList>([]);
   const [populations, setPopulations] = useState<graphData[]>([]);
   const [graphfontSize, setgraphFontSize] = useState<number>(14);
-  const [selectedOption, setSelectedOption] = useState<option | null>({ label: '総人口', value: 0 });
+  const [selectedOption, setSelectedOption] = useState<option | null>({
+    label: "総人口",
+    value: 0,
+  });
 
   const populationData: graphData[] = [];
   for (let i = startYear; i <= endYear; i = i + 5) {
@@ -29,6 +46,7 @@ function Home() {
     for (let j = 1; j <= 47; j++) {
       renderLineList.push(
         <Line
+          path={String(j)}
           type="monotone"
           yAxisId={1}
           dataKey={j}
@@ -50,23 +68,21 @@ function Home() {
   };
 
   const renderPrefectures = () => {
-    console.log('prefectures', prefectures)
-    const prefecturesList = prefectures.map(
-      (pref: prefectures) => {
-        return (
-          <label key={String(pref.prefCode)} className="checkbox_container">
-            <input
-              id={String(pref.prefCode)}
-              className="checkbox"
-              type="checkbox"
-              onChange={handleChange}
-              checked={prefecturesChkList[pref.prefCode]}
-            />
-            {pref.prefName}
-          </label>
-        );
-      },
-    );
+    console.log("prefectures", prefectures);
+    const prefecturesList = prefectures.map((pref: prefectures) => {
+      return (
+        <label key={String(pref.prefCode)} className="checkbox_container">
+          <input
+            id={String(pref.prefCode)}
+            className="checkbox"
+            type="checkbox"
+            onChange={handleChange}
+            checked={prefecturesChkList[pref.prefCode]}
+          />
+          {pref.prefName}
+        </label>
+      );
+    });
     return prefecturesList;
   };
 
@@ -83,7 +99,7 @@ function Home() {
           </option>
         ))}
       </select>
-    )
+    );
   };
 
   const renderGraph = () => {
@@ -100,20 +116,28 @@ function Home() {
           >
             <XAxis
               dataKey="year"
-              tick={{ fontSize: graphfontSize, fill: 'green', fontWeight: 'bold' }}
+              tick={{
+                fontSize: graphfontSize,
+                fill: "green",
+                fontWeight: "bold",
+              }}
               tickFormatter={(tick) => `${tick}年`}
               interval={1}
               domain={[startYear, endYear]}
             />
             <YAxis
               yAxisId={1}
-              tick={{ fontSize: graphfontSize, fill: 'blue', fontWeight: 'bold' }}
+              tick={{
+                fontSize: graphfontSize,
+                fill: "blue",
+                fontWeight: "bold",
+              }}
               tickFormatter={(tick) => `${tick.toLocaleString()}人`}
             />
             {createLine()}
             <Tooltip
               formatter={(value) => {
-                return `${value.toLocaleString()}人`
+                return `${value.toLocaleString()}人`;
               }}
             />
           </LineChart>
@@ -134,10 +158,10 @@ function Home() {
       }
     };
     handleResize();
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
@@ -157,7 +181,10 @@ function Home() {
           Object.keys(prefecturesChkList)
             .filter((key) => prefecturesChkList[Number(key)] === true)
             .map(async (value1: string) => {
-              populationsList = await getPopulations(value1, Number(selectedOption?.value));
+              populationsList = await getPopulations(
+                value1,
+                Number(selectedOption?.value),
+              );
               console.log("populationsList123", populationsList);
               populationsList.map((value, index) => {
                 const param: string = `${value1}`;
@@ -176,9 +203,13 @@ function Home() {
     <>
       <div className="home">
         <header className="home-title">都道府県</header>
-        <div className="home-prefecture-aria">{prefectures[0] && renderPrefectures()}</div>
+        <div className="home-prefecture-aria">
+          {prefectures[0] && renderPrefectures()}
+        </div>
         <div className="home-select-container">{renderSelecter()}</div>
-        <div className='home-graph-aria'>{populations[0] && prefecturesChkList && renderGraph()}</div>
+        <div className="home-graph-aria">
+          {populations[0] && prefecturesChkList && renderGraph()}
+        </div>
       </div>
     </>
   );

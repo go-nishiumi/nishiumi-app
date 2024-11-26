@@ -6,7 +6,7 @@ import Home from "./components/Home/Home";
 
 function App() {
   return (
-    <BrowserRouter basename='/nishiumi-app'>
+    <BrowserRouter basename="/nishiumi-app">
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
