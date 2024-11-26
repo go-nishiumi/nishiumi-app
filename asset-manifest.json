@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/nishiumi-app/static/css/main.f8dded06.css",
-    "main.js": "/nishiumi-app/static/js/main.9da69bc8.js",
+    "main.css": "/nishiumi-app/static/css/main.5f927fd6.css",
+    "main.js": "/nishiumi-app/static/js/main.c47d908c.js",
     "static/js/453.5d835435.chunk.js": "/nishiumi-app/static/js/453.5d835435.chunk.js",
     "index.html": "/nishiumi-app/index.html",
-    "main.f8dded06.css.map": "/nishiumi-app/static/css/main.f8dded06.css.map",
-    "main.9da69bc8.js.map": "/nishiumi-app/static/js/main.9da69bc8.js.map",
+    "main.5f927fd6.css.map": "/nishiumi-app/static/css/main.5f927fd6.css.map",
+    "main.c47d908c.js.map": "/nishiumi-app/static/js/main.c47d908c.js.map",
     "453.5d835435.chunk.js.map": "/nishiumi-app/static/js/453.5d835435.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.f8dded06.css",
-    "static/js/main.9da69bc8.js"
+    "static/css/main.5f927fd6.css",
+    "static/js/main.c47d908c.js"
   ]
 }
