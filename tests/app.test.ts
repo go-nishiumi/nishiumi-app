@@ -16,40 +16,45 @@ test(`初期表示`, async ({ page }) => {
 });
 
 test(`単一：${prefList[0]}のグラフ表示テスト`, async () => {
-  const browser = await chromium.launch({ slowMo: 500 });
+  const browser = await chromium.launch();
   const context = await browser.newContext();
   const page = await context.newPage();
   await page.goto(domain);
 
   // クリックしてグラフ表示
   await page.getByText(`${prefList[0]}`).click();
+  await page.waitForTimeout(1000);
   const ele = page.locator(`[name="${prefList[0]}"]`);
   const lineExists = await ele.isVisible();
   expect(lineExists).toBe(true);
+  await page.waitForTimeout(1000);
 
   // 再クリックでグラフ非表示
   await page.getByText(`${prefList[0]}`).click();
+  await page.waitForTimeout(1000);
   const lineExists2 = await ele.isVisible();
   expect(lineExists2).toBe(false);
 });
 
 test(`プルダウン押下テスト`, async () => {
-  const browser = await chromium.launch({ slowMo: 500 });
+  const browser = await chromium.launch();
   const context = await browser.newContext();
   const page = await context.newPage();
   await page.goto(domain);
+  await page.waitForTimeout(1000);
 
   // クリックしてグラフ表示
   await page.getByText(`${prefList[0]}`).click();
+  await page.waitForTimeout(1000);
   const ele = page.locator(`[name="${prefList[0]}"]`);
   const lineExists = await ele.isVisible();
   expect(lineExists).toBe(true);
 
   for (let i = 0; i <= 3; i++) {
     const initValue = ele.getAttribute('height');
-    await page.waitForTimeout(3000);
+    await page.waitForTimeout(1000);
     await page.getByRole('combobox').selectOption(String(i));
-    await page.waitForTimeout(3000);
+    await page.waitForTimeout(1000);
     const updateValue = page.locator(`[name="${prefList[0]}"]`).getAttribute('height');
     expect(initValue).not.toBe(updateValue);
   }
@@ -65,7 +70,7 @@ test.describe('全県分のグラフ表示テスト', () => {
 
       await page.getByText(`${pref}`).click();
       const ele = page.locator(`[name="${pref}"]`);
-      await page.waitForTimeout(3000);
+      await page.waitForTimeout(1000);
       const lineExists = await ele.isVisible();
       expect(lineExists).toBe(true);
     });
