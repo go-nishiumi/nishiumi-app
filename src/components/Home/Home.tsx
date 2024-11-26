@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { getPopulations, getPrefectures } from "../../services/home";
+import { useEffect, useState } from 'react';
+import { getPopulations, getPrefectures } from '../../services/home';
 import {
   Line,
   LineChart,
@@ -7,16 +7,16 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-} from "recharts";
-import { endYear, options, prefColorList, startYear } from "../../utils/common";
+} from 'recharts';
+import { endYear, options, prefColorList, startYear } from '../../utils/common';
 import {
   graphData,
   option,
   population,
   prefectures,
   prefecturesChkList,
-} from "../../types/interface";
-import "./home.css";
+} from '../../types/interface';
+import './home.css';
 
 function Home() {
   const [prefectures, setPrefectures] = useState<prefectures[]>([]);
@@ -25,7 +25,7 @@ function Home() {
   const [populations, setPopulations] = useState<graphData[]>([]);
   const [graphfontSize, setgraphFontSize] = useState<number>(14);
   const [selectedOption, setSelectedOption] = useState<option | null>({
-    label: "総人口",
+    label: '総人口',
     value: 0,
   });
 
@@ -46,7 +46,7 @@ function Home() {
     for (let j = 1; j <= 47; j++) {
       renderLineList.push(
         <Line
-          path={String(j)}
+          key={j}
           type="monotone"
           yAxisId={1}
           dataKey={j}
@@ -64,11 +64,9 @@ function Home() {
       ...prefecturesChkList,
       [e.target.id]: e.target.checked,
     });
-    console.log("prefecturesChkList:", prefecturesChkList);
   };
 
   const renderPrefectures = () => {
-    console.log("prefectures", prefectures);
     const prefecturesList = prefectures.map((pref: prefectures) => {
       return (
         <label key={String(pref.prefCode)} className="checkbox_container">
@@ -103,7 +101,6 @@ function Home() {
   };
 
   const renderGraph = () => {
-    console.log("populations3", populations);
     return (
       <>
         <ResponsiveContainer width="100%" height="100%">
@@ -118,8 +115,8 @@ function Home() {
               dataKey="year"
               tick={{
                 fontSize: graphfontSize,
-                fill: "green",
-                fontWeight: "bold",
+                fill: 'green',
+                fontWeight: 'bold',
               }}
               tickFormatter={(tick) => `${tick}年`}
               interval={1}
@@ -129,8 +126,8 @@ function Home() {
               yAxisId={1}
               tick={{
                 fontSize: graphfontSize,
-                fill: "blue",
-                fontWeight: "bold",
+                fill: 'blue',
+                fontWeight: 'bold',
               }}
               tickFormatter={(tick) => `${tick.toLocaleString()}人`}
             />
@@ -158,42 +155,39 @@ function Home() {
       }
     };
     handleResize();
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
 
     return () => {
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
   useEffect(() => {
     (async () => {
-      const res = await getPrefectures();
-      setPrefectures(res);
+      const prefecturesList = await getPrefectures();
+      setPrefectures(prefecturesList);
     })();
   }, []);
 
   useEffect(() => {
     (async () => {
       if (Object.keys(prefecturesChkList).length) {
-        console.log("prefecturesChkList333", prefecturesChkList);
         let populationsList: population[] = [];
         await Promise.all(
           Object.keys(prefecturesChkList)
             .filter((key) => prefecturesChkList[Number(key)] === true)
-            .map(async (value1: string) => {
+            .map(async (prefCode: string) => {
               populationsList = await getPopulations(
-                value1,
+                prefCode,
                 Number(selectedOption?.value),
               );
-              console.log("populationsList123", populationsList);
-              populationsList.map((value, index) => {
-                const param: string = `${value1}`;
-                populationData[index][param] = value.value;
+              populationsList.map((prefData, index) => {
+                const param: string = `${prefCode}`;
+                populationData[index][param] = prefData.value;
               });
               return <></>;
             }),
         );
-        console.log("populationsList3", populationData);
         setPopulations(populationData);
       }
     })();
@@ -207,9 +201,7 @@ function Home() {
           {prefectures[0] && renderPrefectures()}
         </div>
         <div className="home-select-container">{renderSelecter()}</div>
-        <div className="home-graph-aria">
-          {populations[0] && prefecturesChkList && renderGraph()}
-        </div>
+        <div className="home-graph-aria">{populations[0] && renderGraph()}</div>
       </div>
     </>
   );
